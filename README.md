@@ -5,4 +5,4 @@ Proyecto Final Intel
     return binascii.a2b_base64(s)
 binascii.Error: Incorrect padding 
 
-Working in progress
+Work in progress
