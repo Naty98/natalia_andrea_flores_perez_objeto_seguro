@@ -36,12 +36,15 @@ class ObjetoSeguro:
     
     def saludar(self, name, msj):
         '''Descrip: Comienza la comunicación.''' 
-        pass
+        cifrado = self.cifrar_msj(self.llave_publica, msj)
+        f'{name} mensaje: {cifrado}'
+        return cifrado
     
     def responder(self, msj):
         '''Descrip:Genera la respuesta al mensaje.'''
-        respuesta = msj + "MensajeRespuesta"
-        return respuesta
+        if self.esperar_respuesta(msj) != 0:
+            respuesta = self.esperar_respuesta(msj) + "MensajeRespuesta"
+            return print(respuesta)
     
     def llave_publica(self):
         '''Obtener la llave pública del objeto seguro.''' 
@@ -52,6 +55,8 @@ class ObjetoSeguro:
         '''Descrip:Cifrar un mensaje con la llave pública
         del destinatario, el retorno es el mensaje cifrado.'''
         # Cargamos la llave pública (instancia de clase RSA)
+        print("-----------------------------------------------------")
+        print(type(msj))
         keyPair = RSA.importKey(pub_key)
         
         # Instancia del cifrador asimétrico
@@ -69,11 +74,14 @@ class ObjetoSeguro:
         
         # Concatenamos la llave simétrica cifrada a los datos cifrados con ella
         enc_data = b"".join((enc_aes_key, cipher_aes.nonce, tag, ciphertext))
+        print("Enc data")
+        print(type(enc_data))
         return enc_data
     
     def descifrar_msj(self, msj):
         '''Descrip: Descifrar un mensaje cifrado, el retorno 
         es el mensaje en texto plano codificado en base64.''' 
+        msj = str(msj)
         data_file = io.BytesIO(self.cifrar_msj(self.llave_publica,msj))
         
         # Cargamos la llave privada (instancia de clase RSA)
@@ -92,6 +100,8 @@ class ObjetoSeguro:
         # Desencriptamos los datos en si con la clave AES
         cipher_aes = AES.new(aes_key, AES.MODE_EAX, nonce)
         data = cipher_aes.decrypt_and_verify(ciphertext, tag)
+        print(type(data))
+        print(type(self.decodificar64(data)))
         return self.decodificar64(data)
     
     def codificar64(self, msj):
@@ -109,21 +119,36 @@ class ObjetoSeguro:
         texto plano, el retorno es el mensaje en texto plano''' 
         # Decodificamos el msj
         text_64_decode = base64.b64decode(msj)
-        data = text_64_decode.decode("utf-8")
-        return data
+        cadena = text_64_decode.decode("utf-8")
+        return cadena
     
     def almacenar_msj(self, msj):
         '''Descrip:Almacenar un mensaje en texto plano en un archivo
-        de texto y se le asigna un ID ''' 
-        pass
+        de texto y se le asigna un ID '''
+        almacenar = {
+            'ID': self.identificador+1,
+            'Nombre': self.nombre,
+            'Mensaje': msj
+            }
+        f = open ('RegistroMsj_<'+self.nombre+'>.txt','w')
+        f.write(almacenar)
+        f.close()
+        return f'ID:<{self.identificador}>'
     
     def consultar_msj(self, identificador):
         '''Descrip:Consultar un mensaje del registro en el archivo de
         texto con el ID asignado.''' 
-        pass
-    
+        f = open ('RegistroMsj_<'+self.nombre+'>.txt','r')
+        if self.identificador in f:
+            mensaje = f.read()
+            #print(mensaje)
+            f.close()
+            return print(mensaje)
+        
     def esperar_respuesta(self, msj):
         '''Descrip:Esperar una respuesta cifrada con llave pública que
         se desencadena hacer un saludo a otro objeto.''' 
-        pass
+        descifrado = self.descifrar_msj(msj)
+        decodificacion = self.decodificar64(descifrado)
+        return self.almacenar_msj(decodificacion)
 
