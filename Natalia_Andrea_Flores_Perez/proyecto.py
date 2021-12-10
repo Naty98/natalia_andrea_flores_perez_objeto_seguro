@@ -7,30 +7,30 @@ from Crypto.Random import get_random_bytes
 from Crypto.Cipher import AES, PKCS1_OAEP
 import base64
 
-#Creacion de la clase
+# Creacion de la clase
 class ObjetoSeguro:
     '''Descrip: Creación de un objeto seguro, se recibe el nombre
     en formato String.'''
-    #Definicion de los atributos del objeto
-    def __init__(self, nombre): #Constructor
-        #Atributos que se reciben
+    # Definicion de los atributos del objeto
+    def __init__(self, nombre):  # Constructor
+        # Atributos que se reciben
         self.nombre = nombre
         self.llave_publica, self.__private_key = self.__gen_llaves()
         
-    #Metodos del objeto
+    # Metodos del objeto
     def __gen_llaves(self):
         '''Descrip:Genera la llave privada y la llave pública.''' 
         # Generar pareja de llaves RSA de 2048 bits de longitud
-        keyPair = RSA.generate(2048)
+        keypair = RSA.generate(2048)
         
         # Passphrase para encriptar la llave privada
         secret_code = "12345"
         
         # Exportamos la llave privada
-        __private_key = keyPair.export_key(passphrase=secret_code)
+        __private_key = keypair.export_key(passphrase=secret_code)
         
         # Obtenemos la llave pública
-        public_key = keyPair.publickey().export_key()
+        public_key = keypair.publickey().export_key()
         
         return public_key, __private_key
     
@@ -57,10 +57,10 @@ class ObjetoSeguro:
         # Cargamos la llave pública (instancia de clase RSA)
         print("-----------------------------------------------------")
         print(type(msj))
-        keyPair = RSA.importKey(pub_key)
+        keypair = RSA.importKey(pub_key)
         
         # Instancia del cifrador asimétrico
-        cipher_rsa = PKCS1_OAEP.new(keyPair)
+        cipher_rsa = PKCS1_OAEP.new(keypair)
         
         # Generamos una llave para el cifrado simétrico
         aes_key = get_random_bytes(16)
@@ -82,17 +82,17 @@ class ObjetoSeguro:
         '''Descrip: Descifrar un mensaje cifrado, el retorno 
         es el mensaje en texto plano codificado en base64.''' 
         msj = str(msj)
-        data_file = io.BytesIO(self.cifrar_msj(self.llave_publica,msj))
+        data_file = io.BytesIO(self.cifrar_msj(self.llave_publica, msj))
         
         # Cargamos la llave privada (instancia de clase RSA)
-        keyPair = RSA.importKey(self.__private_key,  passphrase="12345")
+        keypair = RSA.importKey(self.__private_key,  passphrase="12345")
         
         # Instancia del cifrador asimétrico
-        cipher_rsa = PKCS1_OAEP.new(keyPair)
+        cipher_rsa = PKCS1_OAEP.new(keypair)
         
         # Separamos las distintas partes del msj cifrado
         enc_aes_key, nonce, tag, ciphertext =\
-            (data_file.read(c) for c in (keyPair.size_in_bytes(), 16, 16, -1))
+            (data_file.read(c) for c in (keypair.size_in_bytes(), 16, 16, -1))
         
         # Desencriptamos la clave AES mediante la llave privada RSA
         aes_key = cipher_rsa.decrypt(enc_aes_key)
@@ -130,7 +130,7 @@ class ObjetoSeguro:
             'Nombre': self.nombre,
             'Mensaje': msj
             }
-        f = open ('RegistroMsj_<'+self.nombre+'>.txt','w')
+        f = open('RegistroMsj_<'+self.nombre+'>.txt', 'w')
         f.write(almacenar)
         f.close()
         return f'ID:<{self.identificador}>'
@@ -138,7 +138,7 @@ class ObjetoSeguro:
     def consultar_msj(self, identificador):
         '''Descrip:Consultar un mensaje del registro en el archivo de
         texto con el ID asignado.''' 
-        f = open ('RegistroMsj_<'+self.nombre+'>.txt','r')
+        f = open('RegistroMsj_<'+self.nombre+'>.txt', 'r')
         for linea in f:
             if self.identificador == linea:
                 mensaje = linea
@@ -152,4 +152,3 @@ class ObjetoSeguro:
         descifrado = self.descifrar_msj(msj)
         decodificacion = self.decodificar64(descifrado)
         return self.almacenar_msj(decodificacion)
-
