@@ -139,11 +139,12 @@ class ObjetoSeguro:
         '''Descrip:Consultar un mensaje del registro en el archivo de
         texto con el ID asignado.''' 
         f = open ('RegistroMsj_<'+self.nombre+'>.txt','r')
-        if self.identificador in f:
-            mensaje = f.read()
-            #print(mensaje)
-            f.close()
-            return print(mensaje)
+        for linea in f:
+            if self.identificador == linea:
+                mensaje = linea
+        f.close()
+        return print(mensaje)
+        
         
     def esperar_respuesta(self, msj):
         '''Descrip:Esperar una respuesta cifrada con llave pública que

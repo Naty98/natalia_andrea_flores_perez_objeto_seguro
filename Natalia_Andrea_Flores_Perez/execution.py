@@ -18,12 +18,12 @@ print("El mensaje a cifrar de Alicia es : ", alicia.cifrar_msj(bob.llave_publica
 print("El mensaje a descifrar de Alicia es : ", alicia.descifrar_msj(alicia.cifrar_msj(bob.llave_publica, msj_alicia)))
 
 
-#print("\n\nEl objeto 2 es: ",bob.nombre)
-#print("La llave publica de Bob es : ", bob.llave_publica)
+print("\n\nEl objeto 2 es: ",bob.nombre)
+print("La llave publica de Bob es : ", bob.llave_publica)
 #print("Codificar base64 :", bob.codificar64(msj_bob))
 #print("Decodificar base64 :", bob.decodificar64(bob.codificar64(msj_bob)))
-#print("El mensaje a cifrar de Bob es : ", bob.cifrar_msj(alicia.llave_publica, msj_bob))
-#print("El mensaje a descifrar de Alicia es : ", bob.descifrar_msj(bob.cifrar_msj(alicia.llave_publica, msj_bob)))
+print("El mensaje a cifrar de Bob es : ", bob.cifrar_msj(alicia.llave_publica, msj_bob))
+print("El mensaje a descifrar de Bob es : ", bob.descifrar_msj(bob.cifrar_msj(alicia.llave_publica, msj_bob)))
 
 msj1 = alicia.saludar('Alicia',msj_alicia)
 bob.esperar_respuesta(msj1)
