@@ -1,8 +1,6 @@
 # natalia_andrea_flores_perez_objeto_seguro
 Proyecto Final Intel
 
-1.- Estoy teniendo problemas con el método de esperar_respuesta, el error que me genera al llamarlo en el main es File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.2544.0_x64__qbz5n2kfra8p0\lib\base64.py", line 87, in b64decode
+1.- Ejecute el proyecto en linux y mi error anterior se soluciono, muchas gracias Profesor Diego!. Solo me genero otro error en el método de esperar_respuesta, el nuevo error que me genera al llamarlo en el main es en el File "/usr/lib/python3.8/base64.py", line 87, in b64decode
     return binascii.a2b_base64(s)
-binascii.Error: Incorrect padding 
-
-Work in progress
+binascii.Error: Invalid base64-encoded string: number of data characters (661) cannot be 1 more than a multiple of 4
