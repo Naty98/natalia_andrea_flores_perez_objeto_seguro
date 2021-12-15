@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 import base64
@@ -32,12 +30,3 @@ def decrypt_public_key(encoded_encrypted_msg, public_key):
     #print(decoded_decrypted_msg)
     #return decoded_decrypted_msg
 
-#def main():
-  #private, public = generate_keys()
-  #print (private)
-  #message = b'Hello world'
-  #encoded = encrypt_private_key(message, public)
-  #decrypt_public_key(encoded, private)
-
-#if __name__== "__main__":
-  #main()
